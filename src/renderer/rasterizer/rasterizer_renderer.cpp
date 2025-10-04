@@ -7,6 +7,9 @@
 
 void cg::renderer::rasterization_renderer::init()
 {
+
+	renderer::load_model();
+
 	rasterizer = std::make_shared<cg::renderer::rasterizer<cg::vertex, cg::unsigned_color>>();
 
 	rasterizer->set_viewport(settings->width, settings->height);
@@ -28,7 +31,12 @@ void cg::renderer::rasterization_renderer::render()
 	cg::utils::save_resource(*render_target, settings->result_path);
 	// TODO Lab: 1.04 Implement `vertex_shader` lambda for the instance of `cg::renderer::rasterizer`
 	// TODO Lab: 1.05 Implement `pixel_shader` lambda for the instance of `cg::renderer::rasterizer`
-	// TODO Lab: 1.03 Adjust `cg::renderer::rasterization_renderer` and `cg::renderer::renderer` classes to consume `cg::world::model`
+	for (size_t shape_id = 0; shape_id < model->get_index_buffers().size(); shape_id++)
+	{
+		rasterizer->set_vertex_buffer(model->get_vertex_buffers()[shape_id]);
+		rasterizer->set_index_buffer(model->get_index_buffers()[shape_id]);
+		rasterizer->draw(model->get_index_buffers()[shape_id]->count(), 0);
+	}
 }
 
 void cg::renderer::rasterization_renderer::destroy() {}
