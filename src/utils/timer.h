@@ -16,7 +16,7 @@ namespace cg::utils
         {
             auto stop = std::chrono::high_resolution_clock::now();
 	        std::chrono::duration<float, std::milli> duration = stop - start;
-	        std::cout << event << "- took " << duration.count() << "ms\n";
+	        std::cout << event << " - took " << duration.count() << "ms\n";
         }
     private:
         std::string event;
