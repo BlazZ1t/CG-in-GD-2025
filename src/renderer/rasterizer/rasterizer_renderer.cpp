@@ -32,29 +32,28 @@ void cg::renderer::rasterization_renderer::render()
 		return std::make_pair(processed, vertex_data);
 	};
 
+	rasterizer->pixel_shader = [](cg::vertex data, float z) {
+		return cg::color::from_float3(data.ambient);
+	};
+
 	{
 		cg::utils::timer t("Clear");
 
 		rasterizer->clear_render_target(cg::unsigned_color{
-				.r = 56,
-				.g = 120,
-				.b = 111
+				.r = 255,
+				.g = 0,
+				.b = 0
 			});
 	}
 
 
 	cg::utils::save_resource(*render_target, settings->result_path);
+	for (size_t shape_id = 0; shape_id < model->get_index_buffers().size(); shape_id++)
 	{
-		cg::utils::timer t("Something something");
-		
-		for (size_t shape_id = 0; shape_id < model->get_index_buffers().size(); shape_id++)
-		{
-			rasterizer->set_vertex_buffer(model->get_vertex_buffers()[shape_id]);
-			rasterizer->set_index_buffer(model->get_index_buffers()[shape_id]);
-			rasterizer->draw(model->get_index_buffers()[shape_id]->count(), 0);
-		}
+		rasterizer->set_vertex_buffer(model->get_vertex_buffers()[shape_id]);
+		rasterizer->set_index_buffer(model->get_index_buffers()[shape_id]);
+		rasterizer->draw(model->get_index_buffers()[shape_id]->count(), 0);
 	}
-	// TODO Lab: 1.05 Implement `pixel_shader` lambda for the instance of `cg::renderer::rasterizer`
 }
 
 void cg::renderer::rasterization_renderer::destroy() {}
