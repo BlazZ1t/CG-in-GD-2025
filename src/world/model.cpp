@@ -39,18 +39,19 @@ void cg::world::model::load_obj(const std::filesystem::path& model_path)
 
 void model::allocate_buffers(const std::vector<tinyobj::shape_t>& shapes)
 {
-	for (const auto& shape : shapes) {
+	for (const auto& shape : shapes) 
+	{
 		size_t index_offset = 0;
 		unsigned int vertex_buffer_size = 0;
 		unsigned int index_buffer_size = 0;
-		std::map<std::tuple<int, int, int>, unsigned int> index_map;
+		std::unordered_map<int3, unsigned int> index_map;
 		const auto& mesh = shape.mesh;
 
 		for (const auto &fv : mesh.num_face_vertices) {
 			for (size_t v = 0; v < fv; v++) {
 				tinyobj::index_t idx = mesh.indices[index_offset + v];
 
-				auto idx_tuple = std::make_tuple(
+				auto idx_tuple = int3(
 					idx.vertex_index,
 					idx.normal_index,
 					idx.texcoord_index
@@ -75,9 +76,9 @@ void model::allocate_buffers(const std::vector<tinyobj::shape_t>& shapes)
 
 float3 cg::world::model::compute_normal(const tinyobj::attrib_t& attrib, const tinyobj::mesh_t& mesh, size_t index_offset)
 {
-	auto a_id = mesh.indices[index_offset];
-	auto b_id = mesh.indices[index_offset + 1];
-	auto c_id = mesh.indices[index_offset + 2];
+	auto& a_id = mesh.indices[index_offset];
+	auto& b_id = mesh.indices[index_offset + 1];
+	auto& c_id = mesh.indices[index_offset + 2];
 
 	float3 a{
 		attrib.vertices[3*a_id.vertex_index],
@@ -134,7 +135,7 @@ void model::fill_buffers(const std::vector<tinyobj::shape_t>& shapes, const tiny
 		unsigned int index_buffer_id = 0;
 		auto& vertex_buffer = vertex_buffers[s];
 		auto& index_buffer = index_buffers[s];
-		std::map<std::tuple<int, int, int>, unsigned int> index_map;
+		std::unordered_map<int3, unsigned int> index_map;
 		const auto& mesh = shapes[s].mesh;
 
 		for (size_t f = 0; f < mesh.num_face_vertices.size(); f++) 
@@ -151,7 +152,7 @@ void model::fill_buffers(const std::vector<tinyobj::shape_t>& shapes, const tiny
 			for (size_t v = 0; v < fv; v++) {
 				tinyobj::index_t idx = mesh.indices[index_offset + v];
 
-				auto idx_tuple = std::make_tuple(
+				auto idx_tuple = int3(
 					idx.vertex_index,
 					idx.normal_index,
 					idx.texcoord_index

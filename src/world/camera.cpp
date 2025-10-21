@@ -4,7 +4,7 @@
 
 #include "utils/error_handler.h"
 
-#include <math.h>
+#include <cmath>
 
 
 using namespace cg::world;
@@ -104,7 +104,7 @@ const float4x4 cg::world::camera::get_projection_matrix() const
 		{f / aspect_ratio, 0, 0, 0},
 		{0, f, 0, 0},
 		{0, 0, z_far / (z_near - z_far), -1},
-		{0, 0, (z_near * z_far) / (z_near - z_far), 0}
+		{0, 0, (z_far * z_near) / (z_near - z_far), 0}
 	};
 }
 
