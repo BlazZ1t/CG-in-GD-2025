@@ -3,6 +3,7 @@
 #include "utils/resource_utils.h"
 #include "utils/timer.h"
 #include "stdio.h"
+#include "ssao.h"
 
 
 void cg::renderer::rasterization_renderer::init()
@@ -52,7 +53,15 @@ void cg::renderer::rasterization_renderer::render()
 		rasterizer->draw(model->get_index_buffers()[shape_id]->count(), 0);
 	}
 
-	cg::utils::save_resource(*render_target, settings->result_path);
+	auto composed = cg::renderer::ssao_cpu::apply_ssao(render_target, depth_buffer, camera->get_projection_matrix(), settings->width, settings->height, 16, 0.5f);
+	if (composed)
+	{
+		cg::utils::save_resource(*composed, settings->result_path);
+	}
+	else
+	{
+		cg::utils::save_resource(*render_target, settings->result_path);
+	}
 }
 
 void cg::renderer::rasterization_renderer::destroy() {}

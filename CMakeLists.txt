@@ -24,7 +24,7 @@ if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
-add_executable(Rasterization src/main.cpp src/renderer/rasterizer/rasterizer_renderer.cpp ${SOURCE})
+add_executable(Rasterization src/main.cpp src/renderer/rasterizer/rasterizer_renderer.cpp src/renderer/rasterizer/ssao.cpp ${SOURCE})
 target_compile_definitions(Rasterization PUBLIC RASTERIZATION)
 target_include_directories(Rasterization PRIVATE ${INCLUDE})
 set_property(TARGET Rasterization PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
