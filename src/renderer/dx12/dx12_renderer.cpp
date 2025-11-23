@@ -11,7 +11,14 @@
 
 void cg::renderer::dx12_renderer::init()
 {
-	// TODO Lab: 3.01 Add `model` and `camera` creation code into `init` method of `dx12_renderer` class
+	cg::renderer::renderer::load_camera();
+	cg::renderer::renderer::load_model();
+
+	view_port = CD3DX12_VIEWPORT(0.f, 0.f, static_cast<float>(settings->width), static_cast<float>(settings->height));
+	scissor_rect = CD3DX12_RECT(0, 0, static_cast<LONG>(settings->width), static_cast<LONG>(settings->height));
+
+	load_pipeline();
+	load_assets();
 }
 
 void cg::renderer::dx12_renderer::destroy()
